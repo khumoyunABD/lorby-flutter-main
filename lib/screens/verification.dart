@@ -90,6 +90,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         //bottom: 30,
                       ),
                       child: PinCodeTextField(
+                        pinBoxRadius: 20,
                         autofocus: true,
                         controller: controller,
                         //hideCharacter: true,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lorby/screens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -74,14 +75,76 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const Text(
+            'С возвращением, 3w_team',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
           Image.asset('assets/sign_in/launch_image.png'),
-          OutlinedButton(
+          const SizedBox(
+            height: 20,
+          ),
+          TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: const Text(
+                        "Точно выйти?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                            style: TextButton.styleFrom(
+                              alignment: Alignment.center,
+                              backgroundColor: Colors.grey,
+                              //foregroundColor: Colors.green,
+                              //disabledBackgroundColor: Colors.black54,
+                              padding: const EdgeInsets.only(
+                                right: 20,
+                                left: 20,
+                                // top: 20,
+                                // bottom: 20,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (ctx) => const LoginScreen()));
+                            },
+                            child: const Text(
+                              "Да, точно",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "Нет, остаться",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  });
             },
             child: const Text(
               'Выйти',
-              style: TextStyle(color: Colors.black, fontSize: 18),
+              style: TextStyle(color: Colors.blue, fontSize: 18),
             ),
           ),
           Text(widget.token1.getString('token')!),

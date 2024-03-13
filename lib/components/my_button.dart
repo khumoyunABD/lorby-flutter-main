@@ -14,18 +14,18 @@ class MyButton extends StatelessWidget {
     return TextButton(
       onPressed: onTap,
       style: TextButton.styleFrom(
-          alignment: Alignment.center,
-          backgroundColor: Colors.black,
-          //foregroundColor: Colors.green,
-          //disabledBackgroundColor: Colors.black54,
-          padding: const EdgeInsets.only(
-            right: 154,
-            left: 154,
-            top: 20,
-            bottom: 20,
-          ),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
+        alignment: Alignment.center,
+        backgroundColor: Colors.black,
+        //foregroundColor: Colors.green,
+        //disabledBackgroundColor: Colors.black54,
+        padding: const EdgeInsets.only(
+          right: 154,
+          left: 154,
+          top: 20,
+          bottom: 20,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      ),
       child: Text(
         buttonText,
         style: const TextStyle(
