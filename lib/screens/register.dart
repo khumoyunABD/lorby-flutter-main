@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lorby/components/my_button.dart';
 import 'package:lorby/components/my_textfield.dart';
 import 'package:lorby/components/my_textfield_password.dart';
@@ -56,14 +57,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
             MaterialPageRoute(builder: (ctx) => const VerificationScreen()));
       } else {
         // Handle login failure
-        const AlertDialog(
-          title: Text('Login Failed'),
+        Navigator.maybePop(context);
+        Fluttertoast.showToast(
+          msg: 'Введи все поля верно!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
       }
     } catch (e) {
-      AlertDialog(
-        title: Text(e.toString()),
-      );
+      // Navigator.maybePop(context);
+      // Fluttertoast.showToast(
+      //   msg: 'Введи все поля верно!',
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.TOP,
+      //   timeInSecForIosWeb: 2,
+      //   backgroundColor: Colors.red,
+      //   textColor: Colors.white,
+      //   fontSize: 16.0,
+      // );
     }
   }
 

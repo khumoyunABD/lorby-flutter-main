@@ -83,6 +83,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     ),
                     Container(
                       //height: 300,
+                      //color: Color.fromARGB(255, 249, 246, 246),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.only(
                         top: 20,
@@ -95,8 +96,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         highlight: true,
                         //highlightColor: Colors.blue,
                         defaultBorderColor: Colors.black,
-                        hasTextBorderColor: Colors.green,
-                        highlightPinBoxColor: Colors.orange,
+                        hasTextBorderColor:
+                            const Color.fromARGB(255, 171, 213, 157),
+                        highlightPinBoxColor: Colors.white,
+                        errorBorderColor: Colors.red,
+                        isCupertino: true,
                         maxLength: 4,
                         hasError: hasError,
                         //maskCharacter: "😎",
@@ -111,7 +115,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         // },
                         pinBoxWidth: 60,
                         pinBoxHeight: 64,
-                        hasUnderline: true,
+                        hasUnderline: false,
                         //wrapAlignment: WrapAlignment.spaceEvenly,
                         pinBoxDecoration:
                             ProvidedPinBoxDecoration.defaultPinBoxDecoration,
