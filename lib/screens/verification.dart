@@ -1,6 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lorby/screens/home.dart';
+import 'package:lorby/screens/register.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+String? usernameAddress2;
+String? tokenAddress2;
 
 class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key});
@@ -10,15 +18,75 @@ class VerificationScreen extends StatefulWidget {
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
-  TextEditingController controller = TextEditingController(text: "");
+  final codeController = TextEditingController();
   String thisText = "";
   int pinLength = 4;
   bool hasError = false;
   String? errorMessage;
+  String? verCode;
+
+  void sendCode() async {
+    Dio dio = Dio();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(color: Colors.black),
+        );
+      },
+    );
+
+    try {
+      final data = {
+        'email': emailAddress,
+        'code': codeController.text,
+      };
+      Response response = await dio.post(
+        'https://wiut3.pythonanywhere.com/api/verify-email/',
+        options: Options(headers: {
+          "Content-Type": "application/json",
+        }),
+        data: data,
+      );
+      print(response.toString());
+      if (response.statusCode == 200) {
+        String token = response.data['token'];
+        String username = response.data['username'];
+        SharedPreferences prefsToken2 = await SharedPreferences.getInstance();
+        SharedPreferences prefsUsername2 =
+            await SharedPreferences.getInstance();
+        await prefsToken2.setString('token', token);
+        await prefsUsername2.setString('username', username);
+
+        setState(() {
+          usernameAddress2 = prefsUsername2.getString('username');
+          tokenAddress2 = prefsToken2.getString('token');
+        });
+
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+      } else {
+        // Handle login failure
+        Navigator.maybePop(context);
+        Fluttertoast.showToast(
+          msg: 'Неправильный код!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   void dispose() {
-    controller.dispose();
+    codeController.dispose();
     super.dispose();
   }
 
@@ -53,7 +121,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                   var copiedText =
                                       await Clipboard.getData("text/plain");
                                   if (copiedText!.text!.isNotEmpty) {
-                                    controller.text = copiedText.text!;
+                                    codeController.text = copiedText.text!;
                                   }
                                   Navigator.of(context).pop();
                                 },
@@ -74,9 +142,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     ),
                     const Text('Введи 4-значный код,'),
                     const Text('высланный на'),
-                    const Text(
-                      'randomemail@gmail.com',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Text(
+                      emailAddress!,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
                       height: 10,
@@ -92,7 +160,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       child: PinCodeTextField(
                         pinBoxRadius: 20,
                         autofocus: true,
-                        controller: controller,
+                        controller: codeController,
                         //hideCharacter: true,
                         highlight: true,
                         //highlightColor: Colors.blue,
@@ -136,28 +204,29 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       height: 30,
                     ),
                     TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                            alignment: Alignment.center,
-                            backgroundColor: Colors.black,
-                            //foregroundColor: Colors.green,
-                            //disabledBackgroundColor: Colors.black54,
-                            padding: const EdgeInsets.only(
-                              right: 80,
-                              left: 80,
-                              top: 20,
-                              bottom: 20,
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18))),
-                        child: const Text(
-                          'Подтвердить',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                      onPressed: sendCode,
+                      style: TextButton.styleFrom(
+                          alignment: Alignment.center,
+                          backgroundColor: Colors.black,
+                          //foregroundColor: Colors.green,
+                          //disabledBackgroundColor: Colors.black54,
+                          padding: const EdgeInsets.only(
+                            right: 80,
+                            left: 80,
+                            top: 20,
+                            bottom: 20,
                           ),
-                        ))
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18))),
+                      child: const Text(
+                        'Подтвердить',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

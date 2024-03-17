@@ -8,6 +8,9 @@ import 'package:lorby/screens/home.dart';
 import 'package:lorby/screens/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+String? usernameAddress1;
+String? tokenAddress1;
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
     super.key,
@@ -43,6 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
     );
+
     try {
       final data = {
         'username': usernameController.text,
@@ -56,16 +60,24 @@ class _LoginScreenState extends State<LoginScreen> {
               data: data);
 
       if (response.statusCode == 200) {
+        print(response.data);
         //Navigate to the home screen after successful login
         String token = response.data['token'];
+        String username = usernameController.text;
         // Store the token in shared preferences
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', token);
+        SharedPreferences prefsToken1 = await SharedPreferences.getInstance();
+        SharedPreferences prefsUsername1 =
+            await SharedPreferences.getInstance();
+        await prefsToken1.setString('token', token);
+        await prefsUsername1.setString('username', username);
 
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (ctx) => HomeScreen(
-                  token1: prefs,
-                )));
+        setState(() {
+          usernameAddress1 = prefsUsername1.getString('username');
+          tokenAddress1 = prefsToken1.getString('token');
+        });
+
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -80,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       Navigator.maybePop(context);
       Fluttertoast.showToast(
-        msg: 'Логин или пароль введен неверно!',
+        msg: 'Логин или пароль введен неверно!!!',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
         timeInSecForIosWeb: 2,
@@ -91,38 +103,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void showErrorMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 2),
-        backgroundColor: Colors.white,
-        content: Text(message),
-        action: SnackBarAction(
-          label: '',
-          onPressed: () {
-            // Code to execute.
-          },
-        ),
-      ),
-    );
-  }
-
-  // @override
-  // void initState() {
-  //   _passwordVisible = false;
-  // }
-
-  // void onTap() {
-  //   Navigator.of(context)
-  //       .push(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         // leading: TextButton(
         //   style: const ButtonStyle(
         //     iconColor: MaterialStatePropertyAll(Colors.white),
