@@ -2,8 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lorby/components/my_button.dart';
-import 'package:lorby/components/my_textfield.dart';
-import 'package:lorby/components/my_textfield_password.dart';
+
 import 'package:lorby/screens/verification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -161,6 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           'Регистрация',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -271,7 +271,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: TextFormField(
-                        obscureText: _passwordVisible,
+                        obscureText: !_passwordVisible,
                         decoration: InputDecoration(
                           enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
@@ -341,7 +341,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: TextFormField(
-                        obscureText: _passwordVisible,
+                        obscureText: !_passwordVisible,
                         decoration: InputDecoration(
                           enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),

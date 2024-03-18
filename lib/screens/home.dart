@@ -143,7 +143,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(
-            height: 20,
+            height: 5,
+          ),
+          const Text(
+            'Lorby - твой личный репетитор',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
           ),
           Image.asset('assets/sign_in/launch_image.png'),
           const SizedBox(
